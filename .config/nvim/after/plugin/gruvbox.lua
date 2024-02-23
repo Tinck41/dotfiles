@@ -21,7 +21,8 @@ require("gruvbox").setup({
 		["@storageclass"] = { fg = "#ebdbb2" },
 		["@string"] = { fg = "#ebdbb2" },
 		["@keyword.import.cpp"] = { fg = "#fb4934" },
-		["@keyword.directive.cpp"] = { fg = "#fb4934" }
+		["@keyword.directive.cpp"] = { fg = "#fb4934" },
+		["@keyword.storage.cpp"] = { fg = "#ebdbb2" }
 	}
 })
 vim.cmd("colorscheme gruvbox")

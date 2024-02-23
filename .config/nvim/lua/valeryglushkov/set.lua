@@ -14,12 +14,12 @@ vim.opt.scrolloff = 8
 
 vim.opt.list = true
 vim.opt.listchars = {
-    space = "⋅",
-    eol = "↴",
-    tab = "▎_",
-    -- tab = "|_>",
-    trail = "•",
-    extends = "❯",
-    precedes = "❮",
-    nbsp = "",
+	space = "⋅",
+	eol = "↴",
+	tab = "▎ ",
+	-- tab = "|_>",
+	trail = "•",
+	extends = "❯",
+	precedes = "❮",
+	nbsp = "",
 }

@@ -7,6 +7,8 @@ require("mason-nvim-dap").setup({
 	handlers = {},
 })
 
+dap.defaults.fallback.exception_breakpoints = {'raised'}
+
 dapui.setup()
 dap.listeners.after.event_initialized["dapui_config"] = function()
 	dapui.open()
