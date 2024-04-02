@@ -1,5 +1,5 @@
---- asdasda
 require("gruvbox").setup({
+	terminal_colors=false,
 	overrides = {
 		["@lsp.type.method"] = { fg = "#fe8019" },
 		["@lsp.type.function"] = { fg = "#ebdbb2" },
