@@ -51,6 +51,13 @@ return require('packer').startup(function(use)
 	use { "christoomey/vim-tmux-navigator" }
 	use { "FabijanZulj/blame.nvim" }
 	use { "nvim-pack/nvim-spectre" }
-	use { "theprimeagen/harpoon" }
+	use {
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		requires = { 
+			{"nvim-lua/plenary.nvim"},
+			{"nvim-telescope/telescope.nvim"}
+		}
+	}
 	use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 end)
