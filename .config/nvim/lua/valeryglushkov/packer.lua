@@ -17,6 +17,18 @@ return require('packer').startup(function(use)
 		end
 	})
 
+	use({
+		"L3MON4D3/LuaSnip",
+		-- follow latest release.
+		tag = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+		-- install jsregexp (optional!:).
+		run = "make install_jsregexp",
+		requires = {
+			{ 'saadparwaiz1/cmp_luasnip' },
+			{'rafamadriz/friendly-snippets'}
+		}
+	})
+
 	use {
 		'VonHeikemen/lsp-zero.nvim',
 		branch = 'v2.x',
@@ -30,7 +42,6 @@ return require('packer').startup(function(use)
 			{'hrsh7th/nvim-cmp'},     -- Required
 			{'hrsh7th/cmp-nvim-lsp'}, -- Required
 			{'L3MON4D3/LuaSnip'},     -- Required
-			{'rafamadriz/friendly-snippets'}
 		}
 	}
 	use { 'mfussenegger/nvim-dap' }

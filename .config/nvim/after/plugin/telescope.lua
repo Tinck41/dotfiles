@@ -8,3 +8,4 @@ vim.keymap.set("n", "<leader>F", builtin.live_grep, {})
 vim.keymap.set("n", "<leader>N", function()
 	builtin.lsp_dynamic_workspace_symbols({ symbols = { "class" } });
 end)
+vim.keymap.set("n", "<leader>to", builtin.resume, {});
