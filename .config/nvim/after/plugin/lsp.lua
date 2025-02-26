@@ -6,9 +6,13 @@ lsp.ensure_installed({
 	'clangd',
 	'lua_ls',
 	'jsonls',
+	'ols',
+	'rust_analyzer',
 })
 
 require("luasnip.loaders.from_vscode").lazy_load()
+
+vim.api.nvim_set_hl(0, "MyPmenuSel",  { bg = "#d65d0e", fg = "#ebdbb2" })
 
 local cmp = require("cmp")
 
@@ -41,7 +45,8 @@ cmp.setup({
 lsp.on_attach(function(client, bufnr)
 	local opts = {buffer = bufnr, remap = false}
 
-	vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+	-- vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+	vim.keymap.set("n", "gd", ":Telescope lsp_definitions<Cr>")
 	vim.keymap.set("n", "gi", function() vim.lsp.buf.implementation() end, opts)
 	vim.keymap.set("n", "<leader>ko", ":ClangdSwitchSourceHeader<Cr>")
 	vim.keymap.set("n", "<leader>gi", function() vim.lsp.buf.hover() end, opts)
@@ -67,6 +72,12 @@ lspconfig.lua_ls.setup {
 	capabilities = capabilities,
 }
 lspconfig.jsonls.setup {
+	capabilities = capabilities,
+}
+lspconfig.ols.setup {
+	capabilities = capabilities,
+}
+lspconfig.rust_analyzer.setup {
 	capabilities = capabilities,
 }
 

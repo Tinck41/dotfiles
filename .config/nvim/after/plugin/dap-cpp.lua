@@ -3,7 +3,7 @@ local dapui = require('dapui')
 
 require("mason").setup()
 require("mason-nvim-dap").setup({
-	ensure_installed = { "codelldb" },
+	ensure_installed = { "clangd", "codelldb", "rust_analyzer", "lua_ls", "jsonls", "ols" },
 	handlers = {},
 })
 
