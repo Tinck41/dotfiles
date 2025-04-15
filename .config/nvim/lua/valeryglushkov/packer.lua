@@ -4,7 +4,8 @@ return require('packer').startup(function(use)
 	use 'wbthomason/packer.nvim'
 
 	use {
-		'nvim-telescope/telescope.nvim', tag = '0.1.2',
+		'nvim-telescope/telescope.nvim',
+		-- tag = '0.1.2', workaround for nvim 11.0
 		-- or                            , branch = '0.1.x',
 		requires = { {'nvim-lua/plenary.nvim'} }
 	}
@@ -72,4 +73,8 @@ return require('packer').startup(function(use)
 	}
 	use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 	use { 'sphamba/smear-cursor.nvim' }
+	use { 'nvim-treesitter/nvim-treesitter-context' }
+	use { 'm4xshen/autoclose.nvim' }
+	use { 'folke/flash.nvim' }
+	use { 'kylechui/nvim-surround' }
 end)

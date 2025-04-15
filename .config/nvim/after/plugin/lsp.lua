@@ -1,20 +1,73 @@
-local lsp = require("lsp-zero")
-
-lsp.preset("recommended")
-
-lsp.ensure_installed({
-	'clangd',
-	'lua_ls',
-	'jsonls',
-	'ols',
-	'rust_analyzer',
+vim.lsp.config('*', {
+	capabilities = {
+		textDocument = {
+			semanticTokens = {
+				multilineTokenSupport = true,
+			}
+		}
+	},
+	root_markers = { '.git' },
 })
 
-require("luasnip.loaders.from_vscode").lazy_load()
+vim.lsp.enable({
+	'luals',
+	'clangd',
+	'rust-analyzer',
+	'json-lsp',
+	'ols',
+})
+
+vim.opt.completeopt = "menuone,noselect,popup";
+
+vim.api.nvim_create_autocmd('LspAttach', {
+	group = vim.api.nvim_create_augroup('my.lsp', {}),
+	callback = function(args)
+		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+		local builtin = require("telescope.builtin")
+
+		vim.keymap.set("n", "<leader>N", function() builtin.lsp_dynamic_workspace_symbols({ symbols = { "class", "struct" } }); end)
+		vim.keymap.set("n", "<leader>M", function() builtin.lsp_document_symbols({ symbols = { "method" } }); end)
+		vim.keymap.set("n", "<leader>V", function() builtin.lsp_document_symbols({ symbols = { "field" } }); end)
+
+		if client.name == "clangd" then
+			vim.keymap.set("n", "<leader>ko", function()
+				local params = { uri = vim.uri_from_bufnr(0) }
+				client.request("textDocument/switchSourceHeader", params, function(err, result)
+					if err then
+						vim.notify("Switch header/source failed: " .. err.message, vim.log.levels.ERROR)
+						return
+					end
+					if not result then
+						vim.notify("No corresponding file found", vim.log.levels.INFO)
+						return
+					end
+					vim.cmd("edit " .. vim.uri_to_fname(result))
+				end, 0)
+			end, { buffer = args.buf, desc = "Switch between source/header" })
+		end
+		if client:supports_method('textDocument/defenition') then
+			vim.keymap.set("n", "gd", function() builtin.lsp_definitions(); end)
+		end
+		if client:supports_method('textDocument/reference') then
+			vim.keymap.set("n", "gr", function() builtin.lsp_references(); end)
+		end
+		if client:supports_method('textDocument/implementation') then
+			vim.keymap.set("n", "gi", function() builtin.lsp_implementations(); end)
+		end
+		if client:supports_method('textDocument/completion') then
+		end
+	end,
+})
+
+ vim.diagnostic.config({
+	 update_in_insert = true,
+	 virtual_lines = { current_line = true }
+ })
+
+ require("luasnip.loaders.from_vscode").lazy_load()
+local cmp = require("cmp")
 
 vim.api.nvim_set_hl(0, "MyPmenuSel",  { bg = "#d65d0e", fg = "#ebdbb2" })
-
-local cmp = require("cmp")
 
 cmp.setup({
 	snippet = {
@@ -31,7 +84,7 @@ cmp.setup({
 		}
 	},
 	mapping = cmp.mapping.preset.insert({
-		['<C-Space>'] = cmp.mapping.complete(),
+		['<C-s>'] = cmp.mapping.complete(),
 		['<CR>'] = cmp.mapping.confirm({ select = true })
 	}),
 	sources = cmp.config.sources({
@@ -41,45 +94,3 @@ cmp.setup({
 		{ name = 'buffer' },
 	})
 })
-
-lsp.on_attach(function(client, bufnr)
-	local opts = {buffer = bufnr, remap = false}
-
-	-- vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-	vim.keymap.set("n", "gd", ":Telescope lsp_definitions<Cr>")
-	vim.keymap.set("n", "gi", function() vim.lsp.buf.implementation() end, opts)
-	vim.keymap.set("n", "<leader>ko", ":ClangdSwitchSourceHeader<Cr>")
-	vim.keymap.set("n", "<leader>gi", function() vim.lsp.buf.hover() end, opts)
-
-	opts = { noremap=true, silent=true }
-
-	local function quickfix()
-		vim.lsp.buf.code_action({
-			filter = function(a) return a.isPreferred end,
-			apply = true
-		})
-	end
-	vim.keymap.set('n', '<leader>qf', quickfix, opts)
-end)
-
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-local lspconfig = require('lspconfig')
-
-lspconfig.clangd.setup {
-	capabilities = capabilities,
-}
-lspconfig.lua_ls.setup {
-	capabilities = capabilities,
-}
-lspconfig.jsonls.setup {
-	capabilities = capabilities,
-}
-lspconfig.ols.setup {
-	capabilities = capabilities,
-}
-lspconfig.rust_analyzer.setup {
-	capabilities = capabilities,
-}
-
-lsp.setup()
-
